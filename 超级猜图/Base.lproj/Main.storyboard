@@ -57,6 +57,9 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted" title="下一张" backgroundImage="btn_right_highlighted"/>
+                                <connections>
+                                    <action selector="nextFouction" destination="vXZ-lx-hvc" eventType="touchUpInside" id="I45-2S-F8u"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1/10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gKd-75-TvP">
                                 <rect key="frame" x="0.0" y="28" width="320" height="21"/>
@@ -81,7 +84,6 @@
                                 <state key="normal" image="movie_jf" backgroundImage="center_img">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="highlighted" image="movie_jf" backgroundImage="center_img"/>
                                 <connections>
                                     <action selector="BigImage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="6Sl-2H-cvj"/>
                                 </connections>
@@ -90,7 +92,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="answer" destination="EVo-hd-zFB" id="pAz-Nm-SJt"/>
                         <outlet property="iconButton" destination="WGY-E7-ID6" id="H7q-b2-avC"/>
+                        <outlet property="nextButton" destination="kFO-te-GI9" id="Wb7-4i-8og"/>
+                        <outlet property="num" destination="gKd-75-TvP" id="0BE-iq-eO5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

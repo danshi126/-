@@ -7,17 +7,37 @@
 //
 
 #import "ViewController.h"
+#import "WPQuestion.h"
 
 @interface ViewController ()
+//显示图片
 @property (weak, nonatomic) IBOutlet UIButton *iconButton;
+//图片提示文字
+@property (weak, nonatomic) IBOutlet UILabel *answer;
+//图片序号
+@property (weak, nonatomic) IBOutlet UILabel *num;
 
-@property (strong,nonatomic) UIButton *conver;
+@property (strong,nonatomic) IBOutlet UIButton *nextButton;
+
+//记录图片放大后信息
+@property (strong,nonatomic)  UIButton *conver;
+//索引
+@property (nonatomic,assign) char index;
 
 @end
 
 @implementation ViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.index = -1;
+    self.nextFouction;
+    
+}
 
+//图片滤镜
 - (UIButton *)conver
 {
     if(_conver == nil)
@@ -61,10 +81,24 @@
     
 }
 
-
+//设置手机信息栏
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
+}
+
+
+//下一张图片 按键功能
+- (IBAction)nextFouction
+{
+    NSArray *question = [WPQuestion Questions];
+    self.index++;
+    WPQuestion *info = question[self.index];
+    [self.iconButton setImage:[UIImage imageNamed:info.icon] forState:(UIControlStateNormal)];
+    [self.num setText:[NSString stringWithFormat:@"%d/%lu",self.index+1,(unsigned long)question.count]];
+    [self.answer setText:info.title];
+    
+    self.nextButton.enabled = ((self.index+1) < question.count);
 }
 
 @end
