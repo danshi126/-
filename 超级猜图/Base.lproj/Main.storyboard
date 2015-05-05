@@ -88,14 +88,27 @@
                                     <action selector="BigImage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="6Sl-2H-cvj"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" id="sr7-G8-a7o">
+                                <rect key="frame" x="0.0" y="258" width="320" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="NTG-VJ-oVj">
+                                <rect key="frame" x="0.0" y="312" width="320" height="248"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="answer" destination="EVo-hd-zFB" id="pAz-Nm-SJt"/>
+                        <outlet property="answerView" destination="sr7-G8-a7o" id="xNE-IS-IBo"/>
                         <outlet property="iconButton" destination="WGY-E7-ID6" id="H7q-b2-avC"/>
                         <outlet property="nextButton" destination="kFO-te-GI9" id="Wb7-4i-8og"/>
                         <outlet property="num" destination="gKd-75-TvP" id="0BE-iq-eO5"/>
+                        <outlet property="textView" destination="NTG-VJ-oVj" id="8r7-Dy-KVX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
