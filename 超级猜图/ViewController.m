@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *num;
 
 @property (strong,nonatomic) IBOutlet UIButton *nextButton;
+@property (weak, nonatomic) IBOutlet UIButton *scroe;
 
 //记录图片放大后信息
 @property (strong,nonatomic)  UIButton *conver;
@@ -112,9 +113,14 @@
 //下一张图片 按键功能
 - (IBAction)nextFouction
 {
-//    CGFloat x,y;
-//    NSArray *question = [WPQuestion Questions];
     self.index++;
+    if(self.index == self.questions.count)
+    {
+        NSLog(@"恭喜通关！！！");
+        for(UIButton *but in self.answerView.subviews)
+            [but removeTarget:self action:@selector(clickAnswer:) forControlEvents:(UIControlEventTouchUpInside)];
+        return;
+    }
     WPQuestion *info = self.questions[self.index];
     
     [self crateBasicInfo:info];
@@ -145,31 +151,42 @@
     {
         CGFloat x = margin + (kButtonWidth + kButtonMargin)*i;
         UIButton *but = [[UIButton alloc] initWithFrame:CGRectMake(x, 0, kButtonHeight, kButtonWidth)];
-//        [but setBackgroundColor:[UIColor redColor]];
         [but setBackgroundImage:[UIImage imageNamed:@"btn_answer_highlighted"] forState:(UIControlStateNormal)];
         [but setBackgroundImage:[UIImage imageNamed:@"btn_option_highlighted"] forState:(UIControlStateHighlighted)];
-        [but setTitleColor:[UIColor purpleColor] forState:(UIControlStateNormal)];
+        [but setTitleColor:[UIColor blueColor] forState:(UIControlStateNormal)];
         [self.answerView addSubview:but];
+        [but addTarget:self action:@selector(clickAnswer:) forControlEvents:(UIControlEventTouchUpInside)];
     }
 }
 
 - (void)crateOption:(WPQuestion *)info
 {
-    CGFloat x,y;
-        //答案文字备选
-    int margin = (self.textView.bounds.size.width - kTotalCol * kButtonWidth - (kTotalCol - 1) * kButtonMargin) * 0.5;
-    for(char i = 0; i < info.options.count; i++)
+    char i;
+    if(self.textView.subviews.count != info.options.count)
     {
-        int row = i / kTotalCol;    //行
-        int col = i % kTotalCol;    //列
-        y = row * (kButtonMargin + kButtonWidth);
-        x = margin + col * ((kButtonMargin + kButtonWidth));
-        UIButton *bu = [[UIButton alloc] initWithFrame:CGRectMake(x, y, kButtonWidth, kButtonHeight)];
-        [bu setBackgroundImage:[UIImage imageNamed:@"btn_option"] forState:(UIControlStateNormal)];
-        [bu setBackgroundImage:[UIImage imageNamed:@"btn_option_highlighted"] forState:UIControlStateHighlighted];
-        [bu setTitle:info.options[i] forState:(UIControlStateNormal)];
-        [bu setTitleColor:[UIColor purpleColor] forState:(UIControlStateNormal)];
-         [self.textView addSubview:bu];
+        CGFloat x,y;
+        //答案文字备选
+        int margin = (self.textView.bounds.size.width - kTotalCol * kButtonWidth - (kTotalCol - 1) * kButtonMargin) * 0.5;
+        for(i = 0; i < info.options.count; i++)
+        {
+            int row = i / kTotalCol;    //行
+            int col = i % kTotalCol;    //列
+            y = row * (kButtonMargin + kButtonWidth);
+            x = margin + col * ((kButtonMargin + kButtonWidth));
+            UIButton *bu = [[UIButton alloc] initWithFrame:CGRectMake(x, y, kButtonWidth, kButtonHeight)];
+            [bu setBackgroundImage:[UIImage imageNamed:@"btn_option"] forState:(UIControlStateNormal)];
+            [bu setBackgroundImage:[UIImage imageNamed:@"btn_option_highlighted"] forState:UIControlStateHighlighted];
+        
+            [bu setTitleColor:[UIColor purpleColor] forState:(UIControlStateNormal)];
+            [self.textView addSubview:bu];
+            [bu addTarget:self action:@selector(clickOption:) forControlEvents:(UIControlEventTouchUpInside)];
+        }
+    }
+    i = 0;
+    for(UIButton *but in self.textView.subviews)
+    {
+        but.hidden = NO;
+        [but setTitle:info.options[i++] forState:(UIControlStateNormal)];
     }
 }
 
@@ -177,8 +194,106 @@
 #pragma mark - 侯选区与答案判断
 - (IBAction) clickOption:(UIButton *)but
 {
+    if(but == nil)
+        return;
+    
+    UIButton *answerBut = [self fristAnswerBut];
+    if(answerBut == nil)
+        return;
+    [answerBut setTitle:but.currentTitle forState:(UIControlStateNormal)];
+    but.hidden = YES;
+    
+    UIButton* ans = [self fristAnswerBut];
+    if(ans == nil)
+    {//答案填满了
+        [self myJudge];
+    }
+}
+
+- (void)myJudge
+{
+    NSMutableString *result = [NSMutableString string];
+    for(UIButton *but in self.answerView.subviews)
+    {
+        [result appendString:but.currentTitle];
+    }
+    
+    if([result isEqualToString:[self.questions[_index] answer]])
+    {//答案正确
+        [self SetButColor:[UIColor yellowColor]];
+    //    [self nextFouction];
+        [self performSelector:@selector(nextFouction) withObject:nil afterDelay:0.5];
+    }
+    else
+    {
+        [self SetButColor:[UIColor redColor]];
+    }
+}
+
+- (UIButton *)fristAnswerBut
+{
+
+    for(UIButton *but in self.answerView.subviews)
+    {
+        if(but.currentTitle.length == 0)
+            return but;
+    }
+    return nil;
+}
+
+- (void)SetButColor:(UIColor *)color
+{
+    for(UIButton *but in self.answerView.subviews)
+    {
+        [but setTitleColor:color forState:(UIControlStateNormal)];
+    }
+}
+
+- (void)clickAnswer:(UIButton *)but
+{
+    if(but == nil)
+        return;
+    for(UIButton *b in self.textView.subviews)
+    {
+        if(([b.currentTitle isEqualToString:but.currentTitle]) && (b.hidden == YES))
+        {
+            b.hidden = NO;
+            break;
+        }
+            
+    }
+    [but setTitle:@"" forState:(UIControlStateNormal)];
+}
+
+
+#pragma mark - 提示按钮操作
+- (IBAction)clickPrompt
+{
+    for(UIButton *but in self.answerView.subviews)
+    {
+        [self clickAnswer:but];
+    }
+    WPQuestion *info = self.questions[[self index]];
+    NSString *fristNum = [info.answer substringToIndex:1];
+    NSLog(@"%@",fristNum);
+    
+    for(UIButton *b in self.textView.subviews)
+    {
+     //   NSLog(@"%@",b);
+        if(([b.currentTitle isEqualToString:fristNum]))
+        {
+            [self clickOption:b];
+            break;
+        }
+    }
     
 }
 
+
+#pragma mark - 分数加减
+- (void)Score_Add:(int)num
+{
+    ;
+}
 
 @end
